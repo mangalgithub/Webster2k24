@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 const app = express();
 
+import connectDB from "./utils/mongo.js";
 // the dotenv package is commonly used to load these environment variables into process.env, making them accessible throughout your application.
 dotenv.config({});
 
@@ -20,7 +21,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+const x = process.env.PASS;
 const port = 5000;
 app.listen(port, () => {
+  connectDB();
   console.log(`Backend server listening at port ${port}`);
 });
