@@ -16,7 +16,7 @@ app.use(cookieParser());
 
 //for cross origin and running both backend and frontend parallely on different ports
 const corsOptions = {
-  origin: "http://localhost:5173", //by default in vite react app
+  origin: "http://localhost:5173",
   credentials: true,
 };
 app.use(cors(corsOptions));
