@@ -4,8 +4,8 @@ import {
   logoutCustomer,
   registerCustomer,
   updateCustomerProfile,
-} from "../controllers/customer.controller";
-import isAuthenticated from "../middleware/isAuthenticated";
+} from "../controllers/customer.controller.js";
+import isAuthenticated from "../middleware/isAuthenticated.js";
 const router = express.Router();
 
 router.route("/register").post(registerCustomer);
