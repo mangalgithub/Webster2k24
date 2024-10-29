@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import Customer from "../models/customer.model.js";
+import { Customer } from "../models/customer.model.js";
 export const registerCustomer = async (req, res) => {
   try {
     const {
@@ -14,6 +14,7 @@ export const registerCustomer = async (req, res) => {
       city,
       profilePhoto,
     } = req.body;
+
     if (
       !fullName ||
       !email ||
