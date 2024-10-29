@@ -11,10 +11,7 @@ const LoginPageSeller = () => {
           backgroundImage: `url(${loginBackground})`,
         }}
       >
-        {/* Overlay for darkening background image */}
         <div className="absolute inset-0 bg-black opacity-50"></div>
-
-        {/* Form container */}
         <div className="relative z-10 max-w-md mx-auto p-16 bg-white bg-opacity-80 rounded-lg shadow-lg backdrop-blur-lg">
           <form className="space-y-5">
             <h1 className="text-2xl font-bold text-center text-gray-700">
@@ -61,7 +58,6 @@ const LoginPageSeller = () => {
             >
               Login
             </button>
-            {/* Link to Signup Page */}
             <p className="text-sm text-center text-gray-600 mt-4">
               Don't have an account?{" "}
               <Link to="/seller/signup" className="text-blue-600 hover:underline">

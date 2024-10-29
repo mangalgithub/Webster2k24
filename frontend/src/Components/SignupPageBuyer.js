@@ -9,17 +9,14 @@ const SignUpPage = () => {
         backgroundImage: `url(${signupBackground})`,
       }}
     >
-      {/* Overlay for darkening background image */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
-      {/* Form container */}
       <div className="relative z-10 max-w-md mx-auto p-12 bg-white bg-opacity-80 rounded-lg shadow-lg backdrop-blur-lg">
         <form className="space-y-2">
           <h1 className="text-2xl font-bold text-center text-gray-700">
             Sign Up
           </h1>
 
-          {/* Full Name */}
           <div className="relative z-0 w-full mb-5 group">
             <input
               type="text"
@@ -37,7 +34,6 @@ const SignUpPage = () => {
             </label>
           </div>
 
-          {/* Email */}
           <div className="relative z-0 w-full mb-5 group">
             <input
               type="email"

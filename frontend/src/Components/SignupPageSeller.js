@@ -9,7 +9,6 @@ const SignUpPageSeller = () => {
         backgroundImage: `url(${signupBackground})`,
       }}
     >
-      {/* Overlay for darkening background image */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       {/* Form container */}
