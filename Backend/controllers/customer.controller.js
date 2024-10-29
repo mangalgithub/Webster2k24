@@ -166,7 +166,7 @@ export const updateCustomerProfile = async (req, res) => {
     if (city) user.address.city = city;
     if (profilePhoto) user.profilePhoto = profilePhoto;
 
-    //this is what is actually making the chnages in the database
+    //this is what is actually making the changes in the database
     await user.save();
 
     user = {
