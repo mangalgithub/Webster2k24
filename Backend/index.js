@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import customerRoute from "./routes/customer.route.js";
 const app = express();
 
 import connectDB from "./utils/mongo.js";
@@ -21,7 +22,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-const x = process.env.PASS;
+//Routes
+app.use("/api/customer", customerRoute);
+
 const port = 5000;
 app.listen(port, () => {
   connectDB();
