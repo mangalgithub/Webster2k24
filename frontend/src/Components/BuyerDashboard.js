@@ -1,47 +1,164 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import loginBackground from "../assests/images/loginBackground.jpg";
+import carousel1 from "../assests/images/carousel1.webp";
+import carousel2 from "../assests/images/carousel2.webp";
 
 const BuyerDashboard = () => {
+  // Dummy data for carousel images
+  const carouselImages = [
+     loginBackground,
+     carousel1,
+     loginBackground,
+     carousel2,
+    loginBackground,
+  ];
+
+  // State for the current slide index
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Function to go to the previous slide
+  const prevSlide = () => {
+    setCurrentSlide((prev) =>
+      prev === 0 ? carouselImages.length - 1 : prev - 1
+    );
+  };
+
+  // Function to go to the next slide
+  const nextSlide = () => {
+    setCurrentSlide((prev) =>
+      prev === carouselImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  // Dummy data for product listing
+  const products = [
+    {
+      id: 1,
+      category: "Electronics",
+      name: "Product 1",
+      price: 15.99,
+      image: "https://dummyimage.com/421x261",
+    },
+    {
+      id: 2,
+      category: "Fashion & Apparel",
+      name: "Product 2",
+      price: 16.99,
+      image: "https://dummyimage.com/422x262",
+    },
+    {
+      id: 3,
+      category: "Groceries",
+      name: "Product 3",
+      price: 17.99,
+      image: "https://dummyimage.com/423x263",
+    },
+    {
+      id: 4,
+      category: "Home Decor",
+      name: "Product 4",
+      price: 18.99,
+      image: "https://dummyimage.com/424x264",
+    },
+    {
+      id: 5,
+      category: "Electronics",
+      name: "Product 5",
+      price: 19.99,
+      image: "https://dummyimage.com/425x265",
+    },
+    {
+      id: 6,
+      category: "Fashion & Apparel",
+      name: "Product 6",
+      price: 20.99,
+      image: "https://dummyimage.com/426x266",
+    },
+    {
+      id: 7,
+      category: "Groceries",
+      name: "Product 7",
+      price: 21.99,
+      image: "https://dummyimage.com/427x267",
+    },
+    {
+      id: 8,
+      category: "Home Decor",
+      name: "Product 8",
+      price: 22.99,
+      image: "https://dummyimage.com/428x268",
+    },
+  ];
+
   return (
     <div className="flex">
-    
       <div className="flex-grow p-4">
-      
+        {/* Carousel Section */}
         <div
           className="relative w-full mb-8"
           id="default-carousel"
           data-carousel="slide"
         >
           <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
-           
-            {[...Array(5)].map((_, idx) => (
+            {carouselImages.map((image, idx) => (
               <div
-                className="duration-700 ease-in-out"
-                data-carousel-item
                 key={idx}
+                className={`duration-700 ease-in-out ${
+                  idx === currentSlide ? "block" : "hidden"
+                }`}
               >
                 <img
-                  src={loginBackground}
+                  src={image}
                   className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                   alt={`Slide ${idx + 1}`}
                 />
               </div>
             ))}
           </div>
-       
+
+          {/* Left Arrow Button */}
           <button
             type="button"
+            onClick={prevSlide}
             className="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group"
-            data-carousel-prev
           >
-            {/* Add SVG for left arrow */}
+            <svg
+              className="w-6 h-6 text-white hover:text-gray-200"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15 19l-7-7 7-7"
+              ></path>
+            </svg>
           </button>
+
+          {/* Right Arrow Button */}
           <button
             type="button"
+            onClick={nextSlide}
             className="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group"
-            data-carousel-next
           >
-            {/* Add SVG for right arrow */}
+            <svg
+              className="w-6 h-6 text-white hover:text-gray-200"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"
+              ></path>
+            </svg>
           </button>
         </div>
 
@@ -49,23 +166,28 @@ const BuyerDashboard = () => {
         <section className="text-gray-600 body-font">
           <div className="container px-5 py-24 mx-auto">
             <div className="flex flex-wrap -m-4">
-              {[...Array(8)].map((_, idx) => (
-                <div key={idx} className="lg:w-1/4 md:w-1/2 p-4 w-full">
+              {products.map((product) => (
+                <div key={product.id} className="lg:w-1/4 md:w-1/2 p-4 w-full">
                   <a className="block relative h-48 rounded overflow-hidden">
-                    <img
-                      alt="ecommerce"
-                      className="object-cover object-center w-full h-full block"
-                      src={`https://dummyimage.com/42${idx}x26${idx}`}
-                    />
+                    <Link
+                      to={`/product/${product.id}`}
+                      className="block relative h-48 rounded overflow-hidden"
+                    >
+                      <img
+                        alt="ecommerce"
+                        className="object-cover object-center w-full h-full block"
+                        src={product.image}
+                      />
+                    </Link>
                   </a>
                   <div className="mt-4">
                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                      CATEGORY
+                      {product.category}
                     </h3>
                     <h2 className="text-gray-900 title-font text-lg font-medium">
-                      Product {idx + 1}
+                      {product.name}
                     </h2>
-                    <p className="mt-1">${(15 + idx).toFixed(2)}</p>
+                    <p className="mt-1">${product.price.toFixed(2)}</p>
                   </div>
                 </div>
               ))}

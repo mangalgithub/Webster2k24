@@ -50,7 +50,7 @@ function AppContent() {
         <Route path="/seller/signup" element={<SignUpPageSeller />} />
         <Route path="/seller/login" element={<LoginPageSeller />} />
         <Route path="/buyerDashboard" element={<BuyerDashboard />} />
-        <Route path="/product_desc" element={<ProductDescription />} />
+        <Route path="/product/:id" element={<ProductDescription />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/designer_dash" element={<DesignerDashboard />} />
         <Route path="/addProduct" element={<AddNewProduct />} />
