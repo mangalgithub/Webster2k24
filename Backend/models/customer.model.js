@@ -44,14 +44,17 @@ const customerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Payment",
     },
-    payment: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Payment",
-    },
+    //!change
     cartItems: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+        },
       },
     ],
     wishlistItems: [
