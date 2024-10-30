@@ -1,12 +1,12 @@
 import express from "express";
 
-import isAuthenticated from "../middleware/isAuthenticated";
+import isAuthenticated from "../middleware/isAuthenticated.js";
 import {
   addNewProduct,
   deleteProduct,
   getProductsDesigned,
   updateProduct,
-} from "../controllers/productD.controller";
+} from "../controllers/productD.controller.js";
 
 const router = express.Router();
 router.route("/getProducts").get(isAuthenticated, getProductsDesigned);
