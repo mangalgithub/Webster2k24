@@ -65,7 +65,7 @@ const productSchema = new mongoose.Schema(
       },
     ],
     rating: {
-      type: mongoose.Types.Decimal128,
+      type: Number,
     },
     availability: {
       type: Boolean,

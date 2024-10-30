@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const reviewSchema = new mongoose.Schema(
   {
     rating: {
-      type: mongoose.Types.Decimal128,
+      type: Number,
       required: true,
       validate: {
         validator: function (value) {

@@ -15,14 +15,14 @@ const designerSchema = new mongoose.Schema(
       required: true,
     },
     phoneNumber: {
-      type: number,
+      type: Number,
       required: true,
     },
     rating: {
       type: mongoose.Types.Decimal128,
     },
     address: {
-      store_name: {
+      storeName: {
         type: String,
         required: true,
       },

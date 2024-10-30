@@ -1,26 +1,27 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { Customer } from "../models/customer.model.js";
-export const registerCustomer = async (req, res) => {
+import { Designer } from "../models/designer.model.js";
+export const registerDesigner = async (req, res) => {
   try {
     const {
       fullName,
       email,
       password,
       phoneNumber,
-      houseNo,
+      storeName,
       street,
       area,
       city,
       profilePhoto,
     } = req.body;
+    console.log(req.body);
 
     if (
       !fullName ||
       !email ||
       !password ||
       !phoneNumber ||
-      !houseNo ||
+      !storeName ||
       !street ||
       !area ||
       !city
@@ -29,7 +30,7 @@ export const registerCustomer = async (req, res) => {
         .status(400)
         .json({ message: "Not all fields have been entered.", success: false });
     }
-    const oldUser = await Customer.findOne({ email });
+    const oldUser = await Designer.findOne({ email });
     if (oldUser) {
       return res.status(400).json({
         message: "You already have a account. Please login.",
@@ -37,13 +38,13 @@ export const registerCustomer = async (req, res) => {
       });
     }
     const hashedPassword = await bcrypt.hash(password, 12);
-    await Customer.create({
+    await Designer.create({
       fullName,
       email,
       password: hashedPassword,
       phoneNumber,
       address: {
-        houseNo,
+        storeName,
         street,
         area,
         city,
@@ -65,7 +66,7 @@ export const registerCustomer = async (req, res) => {
   }
 };
 
-export const loginCustomer = async (req, res) => {
+export const loginDesigner = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -74,14 +75,14 @@ export const loginCustomer = async (req, res) => {
         success: false,
       });
     }
-    let customer = await Customer.findOne({ email });
-    if (!customer) {
+    let designer = await Designer.findOne({ email });
+    if (!designer) {
       return res.status(400).json({
         message: "No account with this email has been registered.",
         success: false,
       });
     }
-    const isPasswordMatch = await bcrypt.compare(password, customer.password);
+    const isPasswordMatch = await bcrypt.compare(password, designer.password);
     if (!isPasswordMatch) {
       return res.status(400).json({
         message: "Incorrect password. Please try again.",
@@ -90,7 +91,7 @@ export const loginCustomer = async (req, res) => {
     }
 
     const tokenData = {
-      userId: customer._id,
+      userId: designer._id,
     };
     const token = jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
       expiresIn: "1d",
@@ -105,7 +106,7 @@ export const loginCustomer = async (req, res) => {
         sameSite: "strict", //This enforces a strict same-site policy, meaning the cookie will only be sent if the request originates from the same domain.
       })
       .json({
-        message: `Welcome back ${customer.fullName}`,
+        message: `Welcome back ${designer.fullName}`,
         success: true,
       });
   } catch (err) {
@@ -116,7 +117,7 @@ export const loginCustomer = async (req, res) => {
     });
   }
 };
-export const logoutCustomer = async (req, res) => {
+export const logoutDesigner = async (req, res) => {
   try {
     return res.status(200).cookie("token", "", { maxAge: 0 }).json({
       message: "Logged out successfully.",
@@ -131,14 +132,14 @@ export const logoutCustomer = async (req, res) => {
   }
 };
 
-export const updateCustomerProfile = async (req, res) => {
+export const updateDesignerProfile = async (req, res) => {
   try {
     const {
       fullName,
       email,
       password,
       phoneNumber,
-      houseNo,
+      storeName,
       street,
       area,
       city,
@@ -148,10 +149,10 @@ export const updateCustomerProfile = async (req, res) => {
     //!cloudinary wala code idhar aaega
 
     let userId = req.id; //the id of user which is logined
-    let user = await Customer.findById(userId);
+    let user = await Designer.findById(userId);
     if (!user) {
       return res.status(400).json({
-        message: "Customer not found",
+        message: "Designer not found",
         success: false,
       });
     }
@@ -161,7 +162,7 @@ export const updateCustomerProfile = async (req, res) => {
     if (email) user.email = email;
     if (password) user.password = password;
     if (phoneNumber) user.phoneNumber = phoneNumber;
-    if (houseNo) user.address.houseNo = houseNo;
+    if (storeName) user.address.storeName = storeName;
     if (street) user.address.street = street;
     if (area) user.address.area = area;
     if (city) user.address.city = city;
@@ -175,7 +176,7 @@ export const updateCustomerProfile = async (req, res) => {
       email: user.email,
       phoneNumber: user.phoneNumber,
       address: {
-        houseNo: user.houseNo,
+        storeName: user.storeName,
         street: user.street,
         area: user.area,
         city: user.city,
