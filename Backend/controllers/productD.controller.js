@@ -1,4 +1,4 @@
-import { Product } from "../models/product.model";
+import { Product } from "../models/product.model.js";
 
 // to get all the products created by a designer through his login details
 export const getProductsDesigned = async (req, res) => {

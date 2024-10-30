@@ -3,12 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import customerRoute from "./routes/customer.route.js";
-<<<<<<< Updated upstream
-import productRoute from "./routes/productC.route.js";
-=======
+import productCRoute from "./routes/productC.route.js";
 import designerRoute from "./routes/designer.route.js";
 import productDRoute from "./routes/productD.route.js";
->>>>>>> Stashed changes
 const app = express();
 
 import connectDB from "./utils/mongo.js";
@@ -30,12 +27,9 @@ app.use(cors(corsOptions));
 
 //Routes
 app.use("/api/customer", customerRoute);
-<<<<<<< Updated upstream
-app.use("/api/product", productRoute);
-=======
+app.use("/api/product", productCRoute);
 app.use("/api/designer", designerRoute);
 app.use("/api/productD", productDRoute);
->>>>>>> Stashed changes
 
 const port = 5000;
 app.listen(port, () => {
