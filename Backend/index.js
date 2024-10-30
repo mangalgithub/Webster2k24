@@ -6,6 +6,7 @@ import customerRoute from "./routes/customer.route.js";
 import productCRoute from "./routes/productC.route.js";
 import designerRoute from "./routes/designer.route.js";
 import productDRoute from "./routes/productD.route.js";
+import reviewRoute from "./routes/review.route.js";
 const app = express();
 
 import connectDB from "./utils/mongo.js";
@@ -30,6 +31,7 @@ app.use("/api/customer", customerRoute);
 app.use("/api/product", productCRoute);
 app.use("/api/designer", designerRoute);
 app.use("/api/productD", productDRoute);
+app.use("/api/review", reviewRoute);
 
 const port = 5000;
 app.listen(port, () => {

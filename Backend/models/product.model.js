@@ -16,10 +16,11 @@ const productSchema = new mongoose.Schema(
     image: {
       type: String,
     },
-    size: {
-      enum: ["S", "M", "L", "XL", "XXL"],
-      type: String,
-    },
+    size: [
+      {
+        type: String,
+      },
+    ],
     category: {
       type: String,
       enum: [

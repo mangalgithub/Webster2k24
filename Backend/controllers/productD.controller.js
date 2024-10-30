@@ -4,7 +4,13 @@ import { Product } from "../models/product.model.js";
 export const getProductsDesigned = async (req, res) => {
   try {
     const id = req.id;
-    const products = await Product.find({ designerId: id });
+    //!idhar kuch to gadbad hai populate me
+    const products = await Product.find({ designerId: id }).populate([
+      // { path: "reviews" },
+      // { path: "designerId" },
+    ]);
+
+    console.log(products);
     if (!products) {
       return res.status(400).json({
         message: "No products found",
@@ -61,12 +67,12 @@ export const addNewProduct = async (req, res) => {
       description,
       price,
       image,
-      size,
+      size: size.split(","),
       category,
       theme,
       tags,
       sustainabilityBadge,
-      createdBy: req.id,
+      designerId: req.id,
     });
 
     return res.status(200).json({
@@ -88,7 +94,29 @@ export const updateProduct = async (req, res) => {
   try {
     //assuming all the changes are being passed in req.body
     const id = req.params.id;
-    const product = await Product.findByIdAndUpdate(id, req.body, {
+    const {
+      productName,
+      description,
+      price,
+      image,
+      size,
+      category,
+      theme,
+      tags,
+      sustainabilityBadge,
+    } = req.body;
+    const body = {
+      productName,
+      description,
+      price,
+      image,
+      size: size.split(","),
+      category,
+      theme,
+      tags,
+      sustainabilityBadge,
+    };
+    const product = await Product.findByIdAndUpdate(id, body, {
       new: true,
     });
     if (!product) {
