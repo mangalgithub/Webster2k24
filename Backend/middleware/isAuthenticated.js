@@ -11,6 +11,7 @@ const isAuthenticated = async (req, res, next) => {
     if (!decode) {
       return res.status(401).json({ message: "Invalid token", success: false });
     }
+    //actually the req.id will be the user id
     req.id = decode.userId;
     //matlab ab agle middleware ya api function pe jao
     next();
