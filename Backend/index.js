@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import customerRoute from "./routes/customer.route.js";
+import productRoute from "./routes/productC.route.js";
 const app = express();
 
 import connectDB from "./utils/mongo.js";
@@ -24,6 +25,7 @@ app.use(cors(corsOptions));
 
 //Routes
 app.use("/api/customer", customerRoute);
+app.use("/api/product", productRoute);
 
 const port = 5000;
 app.listen(port, () => {
