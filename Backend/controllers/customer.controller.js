@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Customer } from "../models/customer.model.js";
+import { Order } from "../models/order.model.js";
 export const registerCustomer = async (req, res) => {
   try {
     const {
@@ -193,5 +194,188 @@ export const updateCustomerProfile = async (req, res) => {
       message: "internal server error",
       success: false,
     });
+  }
+};
+
+export const myOrders = async (req, res) => {
+  try {
+    const userId = req.id;
+    const orders = await Order.find({ customerId: userId })
+      .populate("orderItems.productId")
+      .sort({ createdAt: -1 });
+    return res.status(200).json({ orders, success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+export const getCartItems = async (req, res) => {
+  try {
+    const customerId = req.id;
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return res
+        .status(404)
+        .json({ message: "Customer not found", success: false });
+    }
+    return res
+      .status(200)
+      .json({ cartItems: customer.cartItems, success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+export const addToCart = async (req, res) => {
+  try {
+    const { productId, quantity } = req.body;
+    const customerId = req.id;
+    // Find the customer in the database
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    // Check if the product already exists in the cart
+    const existingCartItem = customer.cartItems.find(
+      (item) => item.productId.toString() === productId
+    );
+
+    if (existingCartItem) {
+      // Update quantity if product already in cart
+      existingCartItem.quantity += Number(quantity) || 1;
+    } else {
+      // Else, add new product to cart
+      customer.cartItems.push({
+        productId,
+        quantity: Number(quantity) || 1,
+      });
+    }
+
+    // Save the updated customer document
+    await customer.save();
+
+    res.status(200).json({
+      message: "Product added to cart",
+      cartItems: customer.cartItems,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+export const removeFromCart = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const customerId = req.id;
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    const updatedCartItems = customer.cartItems.filter(
+      (item) => item.productId.toString() !== productId
+    );
+    customer.cartItems = updatedCartItems;
+    await customer.save();
+    return res.status(200).json({
+      message: "Product removed from cart",
+      cartItems: customer.cartItems,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+export const clearCart = async (req, res) => {
+  try {
+    const customerId = req.id;
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    customer.cartItems = [];
+    await customer.save();
+    return res.status(200).json({ message: "Cart cleared", success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+export const decrementQuantity = async (req, res) => {
+  try {
+    const productId = req.query.productId;
+    const customerId = req.id;
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    let updatedCartItems = customer.cartItems.map((item) => {
+      if (item.productId.toString() === productId) {
+        item.quantity -= 1;
+      }
+      return item;
+    });
+    updatedCartItems = updatedCartItems.filter((item) => item.quantity > 0);
+
+    customer.cartItems = updatedCartItems;
+    await customer.save();
+    return res
+      .status(200)
+      .json({ message: "Quantity decremented", cartItems: customer.cartItems });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+export const cartToOrder = async (req, res) => {
+  try {
+    const customerId = req.id;
+    const customer = await Customer.findById(customerId).populate(
+      "cartItems.productId"
+    );
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    //console.log(customer.cartItems);
+    if (customer.cartItems.length === 0) {
+      return res.status(400).json({ message: "Cart is empty" });
+    }
+    const order = new Order({
+      customerId: customer._id,
+      orderItems: customer.cartItems,
+      totalAmount: customer.cartItems.reduce(
+        (acc, item) => acc + item.quantity * item.productId.price,
+        0
+      ),
+    });
+    //console.log(order);
+    await order.save();
+    customer.cartItems = [];
+    await customer.save();
+    return res
+      .status(200)
+      .json({ message: "Cart converted to order", success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
   }
 };

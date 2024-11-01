@@ -4,10 +4,10 @@ import Fuse from "fuse.js";
 
 export const showAllProducts = async (req, res) => {
   try {
-    console.log("hello");
+    //console.log("hello");
     const products = await Product.find();
     return res.status(200).json({ products, success: true });
-  } catch (error){
+  } catch (error) {
     console.log(error);
     return res
       .status(500)
@@ -17,7 +17,9 @@ export const showAllProducts = async (req, res) => {
 
 export const showProductById = async (req, res) => {
   try {
-    const { productId } = req.query;
+    console.log(req.params);
+    const {productId}=req.params;
+    console.log(productId);
     const product = await Product.findById(productId);
     return res.status(200).json({ product, success: true });
   } catch (error) {
@@ -30,9 +32,10 @@ export const showProductById = async (req, res) => {
 
 export const filterProducts = async (req, res) => {
   try {
-    const category = req.query.category.split(",");
-    const min = req.query.minrange;
-    const max = req.query.maxrange;
+    const allcategories="Men's T-shirts & Polos,Men's Shirts,Men's Jeans & Trousers,Men's Shorts,Men's Kurtas & Ethnic Wear,Men's Jackets & Blazers,Men's Sleepwear,Women's T-shirts,Women's Shirts,Women's Dresses,Women's Tops & T-shirts,Women's Kurtis & Tunics,Women's Sarees,Women's Suits & Sets,Women's Jeans & Pants,Women's Ethnic Wear,Women's Jackets & Coats,Women's Sleepwear,Jewelry,Watches,Bags & Wallets,Belts,Scarves & Stoles,Sunglasses";
+    const category = (req.query.category?req.query.category.split(","):allcategories.split(","));
+    const min = req.query.min||0;
+    const max = req.query.max||Infinity;
     const products = await Product.find({
       $and: [
         { category: { $in: category } },
@@ -96,25 +99,3 @@ export const topFiveProducts = async (req, res) => {
       .json({ message: "Internal server error", success: false });
   }
 };
-
-export const myOrders = async (req, res) =>{
-  try{
-    const userId = req.query.userId;
-    const orders = await Order.find({ customerId: userId });
-    return res.status(200).json({ orders, success: true });
-  }
-  catch (error){
-    console.log(error);
-    return res
-      .status(500)
-      .json({ message: "Internal server error", success: false });
-  }
-};
-
-
-
-
-
-
-
-
