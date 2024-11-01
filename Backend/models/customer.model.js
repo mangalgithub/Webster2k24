@@ -63,6 +63,12 @@ const customerSchema = new mongoose.Schema(
         ref: "Product",
       },
     ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Designer",
+      },
+    ],
     myOrders: [
       {
         type: mongoose.Schema.Types.ObjectId,
