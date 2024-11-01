@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
-const AddNewProduct = () => {
+const UpdateProduct = () => {
   const [productData, setProductData] = useState({
     name: "",
     description: "",
@@ -46,7 +46,7 @@ const AddNewProduct = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Product</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Update Product</h2>
 
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <label className="block mb-2 text-gray-600 font-semibold">
@@ -180,11 +180,11 @@ const AddNewProduct = () => {
           whileTap={{ scale: 0.95 }}
           className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-blue-600 transition duration-200"
         >
-          Add Product
+          Update Product
         </motion.button>
       </div>
     </div>
   );
 };
 
-export default AddNewProduct;
+export default UpdateProduct;

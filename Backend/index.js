@@ -28,7 +28,7 @@ app.use(cors(corsOptions));
 
 //Routes
 app.use("/api/customer", customerRoute);
-app.use("/api/product", productCRoute);
+app.use("/api/productC", productCRoute);
 app.use("/api/designer", designerRoute);
 app.use("/api/productD", productDRoute);
 app.use("/api/review", reviewRoute);
