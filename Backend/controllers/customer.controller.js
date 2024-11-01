@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import { Customer } from "../models/customer.model.js";
 import { Order } from "../models/order.model.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
+import { Notification } from "../models/Notification.model.js";
+import { Designer } from "../models/designer.model.js";
 
 export const registerCustomer = async (req, res) => {
   try {
@@ -218,6 +220,7 @@ export const updateCustomerProfile = async (req, res) => {
   }
 };
 
+//to get all the orders of the customer(by his login details)
 export const myOrders = async (req, res) => {
   try {
     const userId = req.id;
@@ -233,6 +236,7 @@ export const myOrders = async (req, res) => {
   }
 };
 
+//for getting cart items
 export const getCartItems = async (req, res) => {
   try {
     const customerId = req.id;
@@ -252,6 +256,8 @@ export const getCartItems = async (req, res) => {
       .json({ message: "Internal server error", success: false });
   }
 };
+
+//for adding products to the cart
 export const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
@@ -293,6 +299,7 @@ export const addToCart = async (req, res) => {
   }
 };
 
+//for removing all the quantity of a product from the cart
 export const removeFromCart = async (req, res) => {
   try {
     const { productId } = req.body;
@@ -318,6 +325,7 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
+//for clearing the cart(deleting all products from the cart)
 export const clearCart = async (req, res) => {
   try {
     const customerId = req.id;
@@ -336,6 +344,7 @@ export const clearCart = async (req, res) => {
   }
 };
 
+//for decrementing quantity of a product in the cart
 export const decrementQuantity = async (req, res) => {
   try {
     const productId = req.query.productId;
@@ -365,6 +374,7 @@ export const decrementQuantity = async (req, res) => {
   }
 };
 
+//for transferring products in the cart to the order(i.e. the order has been placed)
 export const cartToOrder = async (req, res) => {
   try {
     const customerId = req.id;
@@ -393,6 +403,131 @@ export const cartToOrder = async (req, res) => {
     return res
       .status(200)
       .json({ message: "Cart converted to order", success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+//for adding a product to the wishlist
+export const addToWishlist = async (req, res) => {
+  try {
+    const pid = req.params.id;
+    const customerId = req.id;
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    customer.wishlistItems.push(pid);
+    await customer.save();
+    return res.status(200).json({
+      message: "Product added to wishlist",
+      wishlistItems: customer.wishlistItems,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+//to get all the products in the wishlist(which is added by the customer)
+export const getWishlist = async (req, res) => {
+  try {
+    const customerId = req.id;
+    const customer = await Customer.findById(customerId).populate(
+      "wishlistItems.productId"
+    );
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    return res
+      .status(200)
+      .json({ wishlistItems: customer.wishlistItems, success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+//to get all the products of the wishlist which have just been added by the followed designers and they have not seen the product yet
+//Here we have assumed that when the designer will add a new product ,it will get added as a notification to all the customers following him
+export const getNewWishlist = async (req, res) => {
+  try {
+    const notifications = Notification.find({
+      customerId: req.id,
+      isRead: false,
+    }).populate("productId");
+    const products = await notifications.map((n) => n.productId);
+    return res.status(200).json({ products, success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+export const followDesigner = async (req, res) => {
+  try {
+    const designerId = req.params.id;
+    const customerId = req.id;
+    const customer = await Customer.findById(customerId);
+    const designer = await Designer.findById(designerId);
+    customer.following.push(designerId);
+    designer.followers.push(customerId);
+    await customer.save();
+    await designer.save();
+    return res
+      .status(200)
+      .json({ message: "You are now following the designer", success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+export const unfollowDesigner = async (req, res) => {
+  try {
+    const designerId = req.params.id;
+    const customerId = req.id;
+    const customer = await Customer.findById(customerId);
+    const designer = await Designer.findById(designerId);
+    customer.following = customer.following.filter((id) => id !== designerId);
+    designer.followers = designer.followers.filter((id) => id !== customerId);
+    await customer.save();
+    await designer.save();
+    return res
+      .status(200)
+      .json({ message: "You are not following the designer", success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+};
+
+//for marking all the products in the newwishlist as read
+export const markRead = async (req, res) => {
+  try {
+    const notifications = await Notification.find({
+      customerId: req.id,
+      isRead: false,
+    });
+    notifications.forEach((n) => {
+      n.isRead = true;
+      n.save();
+    });
+    return res.status(200).json({ message: "Notifications marked as read" });
   } catch (error) {
     console.log(error);
     return res

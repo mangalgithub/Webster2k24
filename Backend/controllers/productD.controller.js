@@ -1,3 +1,4 @@
+import { Designer } from "../models/designer.model.js";
 import { Product } from "../models/product.model.js";
 
 // to get all the products created by a designer through his login details
@@ -74,7 +75,17 @@ export const addNewProduct = async (req, res) => {
       sustainabilityBadge,
       designerId: req.id,
     });
-
+    const productId = product._id;
+    const designerId = req.id;
+    const designer = await Designer.findById(designerId).populate("followers");
+    for (follower of designer.followers) {
+      await Notification.create({
+        productId,
+        customerId: follower._id,
+        designerId,
+        isRead: false,
+      });
+    }
     return res.status(200).json({
       message: "Product created successfully",
       product,
