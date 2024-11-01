@@ -6,8 +6,8 @@ export const getProductsDesigned = async (req, res) => {
     const id = req.id;
     //!idhar kuch to gadbad hai populate me
     const products = await Product.find({ designerId: id }).populate([
-      // { path: "reviews" },
-      // { path: "designerId" },
+      { path: "reviews" },
+      { path: "designerId" },
     ]);
 
     console.log(products);

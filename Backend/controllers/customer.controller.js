@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Customer } from "../models/customer.model.js";
 import { Order } from "../models/order.model.js";
+import uploadOnCloudinary from "../utils/cloudinary.js";
+
 export const registerCustomer = async (req, res) => {
   try {
     const {
@@ -13,9 +15,9 @@ export const registerCustomer = async (req, res) => {
       street,
       area,
       city,
-      profilePhoto,
     } = req.body;
 
+    // Check if the request includes all required fields
     if (
       !fullName ||
       !email ||
@@ -30,14 +32,29 @@ export const registerCustomer = async (req, res) => {
         .status(400)
         .json({ message: "Not all fields have been entered.", success: false });
     }
+
+    // console.log(req.body);
+    // console.log(req.file);
+    // Check if the user already exists
     const oldUser = await Customer.findOne({ email });
     if (oldUser) {
       return res.status(400).json({
-        message: "You already have a account. Please login.",
+        message: "You already have an account. Please login.",
         success: false,
       });
     }
+
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Upload profile photo if available
+    let profilePhotoUrl = "";
+    if (req.file) {
+      const response = await uploadOnCloudinary(req.file.path);
+      profilePhotoUrl = response.secure_url;
+    }
+
+    // Create the customer
     await Customer.create({
       fullName,
       email,
@@ -49,9 +66,8 @@ export const registerCustomer = async (req, res) => {
         area,
         city,
       },
+      profilePhoto: profilePhotoUrl, // Save profile photo URL
     });
-
-    //!cloudinary wala code idhar aaega
 
     return res.status(200).json({
       message: "Account created successfully",
@@ -143,12 +159,10 @@ export const updateCustomerProfile = async (req, res) => {
       street,
       area,
       city,
-      profilePhoto,
     } = req.body;
 
-    //!cloudinary wala code idhar aaega
-
-    let userId = req.id; //the id of user which is logined
+    // Retrieve the logged-in user ID
+    const userId = req.id;
     let user = await Customer.findById(userId);
     if (!user) {
       return res.status(400).json({
@@ -156,42 +170,49 @@ export const updateCustomerProfile = async (req, res) => {
         success: false,
       });
     }
-    //updating the data
 
+    // Update the profile photo on Cloudinary if uploaded
+    if (req.file) {
+      const uploadResult = await uploadOnCloudinary(req.file.path);
+      if (uploadResult) {
+        user.profilePhoto = uploadResult.secure_url;
+      }
+    }
+
+    // Update other fields
     if (fullName) user.fullName = fullName;
     if (email) user.email = email;
-    if (password) user.password = password;
+    if (password) user.password = await bcrypt.hash(password, 12);
     if (phoneNumber) user.phoneNumber = phoneNumber;
     if (houseNo) user.address.houseNo = houseNo;
     if (street) user.address.street = street;
     if (area) user.address.area = area;
     if (city) user.address.city = city;
-    if (profilePhoto) user.profilePhoto = profilePhoto;
 
-    //this is what is actually making the changes in the database
+    // Save the updated user to the database
     await user.save();
 
-    user = {
-      fullName: user.fullName,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      address: {
-        houseNo: user.houseNo,
-        street: user.street,
-        area: user.area,
-        city: user.city,
-      },
-      profilePhoto: user.profilePhoto,
-    };
+    // Return the updated user profile
     return res.status(200).json({
       message: "Profile updated successfully",
-      user,
+      user: {
+        fullName: user.fullName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        address: {
+          houseNo: user.address.houseNo,
+          street: user.address.street,
+          area: user.address.area,
+          city: user.address.city,
+        },
+        profilePhoto: user.profilePhoto,
+      },
       success: true,
     });
   } catch (err) {
     console.log(err);
-    return res.status.json(400)({
-      message: "internal server error",
+    return res.status(500).json({
+      message: "Internal server error",
       success: false,
     });
   }
