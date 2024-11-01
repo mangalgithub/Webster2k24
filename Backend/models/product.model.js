@@ -65,10 +65,10 @@ const productSchema = new mongoose.Schema(
         ref: "Review",
       },
     ],
-    rating: {
+    rating:{
       type: Number,
     },
-    availability: {
+    availability:{
       type: Boolean,
       default: true,
     },
@@ -76,7 +76,7 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    designerId: {
+    designerId:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Designer",
     },
