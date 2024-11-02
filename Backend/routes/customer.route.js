@@ -47,5 +47,4 @@ router.route("/markAsRead").put(isAuthenticated,markRead);
 //routes related to following a designer
 router.route("/follow/:id").post(isAuthenticated,followDesigner);
 router.route("/follow/:id").delete(isAuthenticated,unfollowDesigner);
-
 export default router;

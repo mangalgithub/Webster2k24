@@ -122,6 +122,7 @@ export const loginDesigner = async (req, res) => {
       .json({
         message: `Welcome back ${designer.fullName}`,
         success: true,
+        token:token
       });
   } catch (err) {
     console.log(err);

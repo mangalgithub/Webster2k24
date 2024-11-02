@@ -18,7 +18,7 @@ export const registerCustomer = async (req, res) => {
       area,
       city,
     } = req.body;
-
+    console.log("req body",req.body);
     // Check if the request includes all required fields
     if (
       !fullName ||
@@ -88,7 +88,7 @@ export const loginCustomer = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.staus(400).json({
+      return res.status(400).json({
         message: "Not all fields have been entered.",
         success: false,
       });
@@ -125,6 +125,7 @@ export const loginCustomer = async (req, res) => {
       })
       .json({
         message: `Welcome back ${customer.fullName}`,
+        token: token,
         success: true,
       });
   } catch (err) {
@@ -132,6 +133,7 @@ export const loginCustomer = async (req, res) => {
     return res.status(500).json({
       message: "Internal server error",
       success: false,
+
     });
   }
 };
