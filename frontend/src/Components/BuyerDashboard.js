@@ -1,18 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import loginBackground from "../assests/images/loginBackground.jpg";
 import carousel1 from "../assests/images/carousel1.webp";
 import carousel2 from "../assests/images/carousel2.webp";
-
+import axios from "axios";
+import calendarWeeksTemplate from './../../node_modules/flowbite-datepicker/js/picker/templates/calendarWeeksTemplate';
 const BuyerDashboard = () => {
+   const [carouselImages, setCarouselImages] = useState([]);
+   const [products, setProducts] = useState([]);
+  const fetchTopFiveProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/productC/topFiveProducts");
+      console.log(response.data);
+      const tempImages = response.data.products.map((product) => product.image);
+      //console.log(tempImages);
+      setCarouselImages(tempImages); 
+    } catch (error) {
+      console.error("Error fetching top five products:", error);
+    }
+  };
+
+  
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/productC/showAllProducts");
+      console.log(response.data.products);
+      setProducts(response.data.products);
+    } catch (error){
+      console.error("Error fetching products:", error);
+    }
+  }
+  useEffect(() => {
+    fetchTopFiveProducts();
+    fetchProducts();
+  }, []);
   // Dummy data for carousel images
-  const carouselImages = [
-     loginBackground,
-     carousel1,
-     loginBackground,
-     carousel2,
-    loginBackground,
-  ];
+  // const carouselImages = [
+  //    loginBackground,
+  //    carousel1,
+  //    loginBackground,
+  //    carousel2,
+  //   loginBackground,
+  // ];
 
   // State for the current slide index
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -32,64 +62,64 @@ const BuyerDashboard = () => {
   };
 
   // Dummy data for product listing
-  const products = [
-    {
-      id: 1,
-      category: "Electronics",
-      name: "Product 1",
-      price: 15.99,
-      image: "https://dummyimage.com/421x261",
-    },
-    {
-      id: 2,
-      category: "Fashion & Apparel",
-      name: "Product 2",
-      price: 16.99,
-      image: "https://dummyimage.com/422x262",
-    },
-    {
-      id: 3,
-      category: "Groceries",
-      name: "Product 3",
-      price: 17.99,
-      image: "https://dummyimage.com/423x263",
-    },
-    {
-      id: 4,
-      category: "Home Decor",
-      name: "Product 4",
-      price: 18.99,
-      image: "https://dummyimage.com/424x264",
-    },
-    {
-      id: 5,
-      category: "Electronics",
-      name: "Product 5",
-      price: 19.99,
-      image: "https://dummyimage.com/425x265",
-    },
-    {
-      id: 6,
-      category: "Fashion & Apparel",
-      name: "Product 6",
-      price: 20.99,
-      image: "https://dummyimage.com/426x266",
-    },
-    {
-      id: 7,
-      category: "Groceries",
-      name: "Product 7",
-      price: 21.99,
-      image: "https://dummyimage.com/427x267",
-    },
-    {
-      id: 8,
-      category: "Home Decor",
-      name: "Product 8",
-      price: 22.99,
-      image: "https://dummyimage.com/428x268",
-    },
-  ];
+  // const products = [
+  //   {
+  //     id: 1,
+  //     category: "Electronics",
+  //     name: "Product 1",
+  //     price: 15.99,
+  //     image: "https://dummyimage.com/421x261",
+  //   },
+  //   {
+  //     id: 2,
+  //     category: "Fashion & Apparel",
+  //     name: "Product 2",
+  //     price: 16.99,
+  //     image: "https://dummyimage.com/422x262",
+  //   },
+  //   {
+  //     id: 3,
+  //     category: "Groceries",
+  //     name: "Product 3",
+  //     price: 17.99,
+  //     image: "https://dummyimage.com/423x263",
+  //   },
+  //   {
+  //     id: 4,
+  //     category: "Home Decor",
+  //     name: "Product 4",
+  //     price: 18.99,
+  //     image: "https://dummyimage.com/424x264",
+  //   },
+  //   {
+  //     id: 5,
+  //     category: "Electronics",
+  //     name: "Product 5",
+  //     price: 19.99,
+  //     image: "https://dummyimage.com/425x265",
+  //   },
+  //   {
+  //     id: 6,
+  //     category: "Fashion & Apparel",
+  //     name: "Product 6",
+  //     price: 20.99,
+  //     image: "https://dummyimage.com/426x266",
+  //   },
+  //   {
+  //     id: 7,
+  //     category: "Groceries",
+  //     name: "Product 7",
+  //     price: 21.99,
+  //     image: "https://dummyimage.com/427x267",
+  //   },
+  //   {
+  //     id: 8,
+  //     category: "Home Decor",
+  //     name: "Product 8",
+  //     price: 22.99,
+  //     image: "https://dummyimage.com/428x268",
+  //   },
+  // ];
 
   return (
     <div className="flex">
@@ -167,10 +197,10 @@ const BuyerDashboard = () => {
           <div className="container px-5 py-24 mx-auto">
             <div className="flex flex-wrap -m-4">
               {products.map((product) => (
-                <div key={product.id} className="lg:w-1/4 md:w-1/2 p-4 w-full">
+                <div key={product._id} className="lg:w-1/4 md:w-1/2 p-4 w-full">
                   <a className="block relative h-48 rounded overflow-hidden">
                     <Link
-                      to={`/product/${product.id}`}
+                      to={`/product/${product._id}`}
                       className="block relative h-48 rounded overflow-hidden"
                     >
                       <img
@@ -185,7 +215,7 @@ const BuyerDashboard = () => {
                       {product.category}
                     </h3>
                     <h2 className="text-gray-900 title-font text-lg font-medium">
-                      {product.name}
+                      {product.productName}
                     </h2>
                     <p className="mt-1">${product.price.toFixed(2)}</p>
                   </div>
