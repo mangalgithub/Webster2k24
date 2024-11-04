@@ -217,7 +217,7 @@ const BuyerDashboard = () => {
                     <h2 className="text-gray-900 title-font text-lg font-medium">
                       {product.productName}
                     </h2>
-                    <p className="mt-1">${product.price.toFixed(2)}</p>
+                    <p className="mt-1">₹{product.price.toFixed(2)}</p>
                   </div>
                 </div>
               ))}

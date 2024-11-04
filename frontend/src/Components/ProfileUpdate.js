@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import axios from "axios";
+
 
 const ProfileUpdate = () => {
   const [profileData, setProfileData] = useState({
-    name: "",
-    phoneNo: "",
+    fullName: "",
+    phoneNumber: "",
     houseNo: "",
     street: "",
     area: "",
@@ -23,8 +25,25 @@ const ProfileUpdate = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    console.log(profileData);
+
+    // Send the updated profile data to the backend
+    
+    const formData = new FormData();
+      formData.append("fullName",profileData.fullName);
+      formData.append("phoneNumber", profileData.phoneNumber);
+      formData.append("houseNo", profileData.houseNo);
+      formData.append("street", profileData.street);
+      formData.append("area", profileData.area);
+      formData.append("city", profileData.city);
+      if (profileData.profilePhoto) formData.append("profilePhoto", profileData.profilePhoto);
+
+      const response= await axios.post("http://localhost:5000/api/customer/update", formData,{
+        withCredentials: true
+      });
+        console.log(response.data);
     alert("Profile Updated Successfully!");
   };
 
@@ -38,8 +57,8 @@ const ProfileUpdate = () => {
           <label className="mb-2 text-gray-600 font-medium">Name</label>
           <input
             type="text"
-            name="name"
-            value={profileData.name}
+            name="fullName"
+            value={profileData.fullName}
             onChange={handleInputChange}
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
@@ -49,8 +68,8 @@ const ProfileUpdate = () => {
           <label className="mb-2 text-gray-600 font-medium">Phone Number</label>
           <input
             type="tel"
-            name="phoneNo"
-            value={profileData.phoneNo}
+            name="phoneNumber"
+            value={profileData.phoneNumber}
             onChange={handleInputChange}
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
