@@ -293,7 +293,7 @@ export const addToCart = async (req, res) => {
       message: "Product added to cart",
       cartItems: customer.cartItems,
     });
-  } catch (error) {
+  } catch (error){
     console.log(error);
     return res
       .status(500)
@@ -537,3 +537,4 @@ export const markRead = async (req, res) => {
       .json({ message: "Internal server error", success: false });
   }
 };
+

@@ -1,30 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
-const products = [
-  {
-    id: "1",
-    name: "Jeans",
-    brand: "BRAND NAME",
-    price: "$89.00",
-    description:
-      "Fam locavore kickstarter distillery. Mixtape chillwave tumeric...",
-    image: "https://dummyimage.com/400x400",
-  },
-  {
-    id: "2",
-    name: "Shirt",
-    brand: "BRAND NAME",
-    price: "$58.00",
-    description:
-      "Fam locavore kickstarter distillery. Mixtape chillwave tumeric...",
-    image: "https://dummyimage.com/400x400",
-  },
-];
+import axios from "axios";
 
 const ProductDescription = () => {
   const { id } = useParams();
-  const product = products.find((p) => p.id === id);
+  const [product, setProduct] = useState(null);
+
+  const fetchProduct = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/productC/showProductById/${id}`
+      );
+      //console.log(response.data.product);
+      setProduct(response.data.product);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    }
+  };
+  useEffect(() => {
+    fetchProduct();
+  }, []);
 
   if (!product) {
     return <div>Product not found</div>;
@@ -45,13 +40,15 @@ const ProductDescription = () => {
                 {product.brand}
               </h2>
               <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
-                {product.name}
+                {product.productName}
               </h1>
               <div className="flex mb-4">
                 {/* Rating Section */}
                 <span className="flex items-center">
                   {/* Rating SVGs omitted for brevity */}
-                  <span className="text-gray-600 ml-3">4 Reviews</span>
+                  <span className="text-gray-600 ml-3">
+                    {product.reviews.length} reviews
+                  </span>
                 </span>
                 {/* Social Media Links Section */}
                 <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2">

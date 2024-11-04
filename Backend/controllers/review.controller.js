@@ -34,14 +34,20 @@ export const addNewReview = async (req, res) => {
     });
 
     //this will add the review to the product and also save it
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate("reviews");
+    const NoOfReviews = product.reviews.length;
     product.reviews.push(review._id);
+
+    product.rating =
+      (rating + product.rating * NoOfReviews) / (NoOfReviews + 1);
+
     await product.save();
 
     return res.status(201).json({
       message: "Review added successfully",
       success: true,
       review,
+      product,
     });
   } catch (err) {
     console.log(err);
