@@ -1,13 +1,30 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const DesignerDashboard = () => {
-  const products = [
-    { id: 1, name: "Stylish T-Shirt", img: "https://dummyimage.com/200x200" },
-    { id: 2, name: "Modern Jeans", img: "https://dummyimage.com/200x200" },
-    { id: 3, name: "Elegant Dress", img: "https://dummyimage.com/200x200" },
-    { id: 4, name: "Casual Jacket", img: "https://dummyimage.com/200x200" },
-  ];
+  const [products, setProducts] = useState([]);
+
+  const fetchproducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/productD/getProducts");
+      console.log(response.data.products);
+      setProducts(response.data.products);
+    } catch (error){
+      console.error("Error fetching products:", error);
+    }
+  }
+  // const products = [
+  //   { _id: 1, productName: "Stylish T-Shirt", image: "https://dummyimage.com/200x200" },
+  //   { _id: 2, productName: "Modern Jeans", image: "https://dummyimage.com/200x200" },
+  //   { _id: 3, productName: "Elegant Dress", image: "https://dummyimage.com/200x200" },
+  //   { _id: 4, productName: "Casual Jacket", image: "https://dummyimage.com/200x200" },
+  // ];
+
+
+  useEffect(() => {
+      fetchproducts();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -29,13 +46,13 @@ const DesignerDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 p-4 w-full max-w-4xl">
         {products.map((product) => (
           <motion.div
-            key={product.id}
+            key={product._id}
             className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300 transform hover:-translate-y-1"
             whileHover={{ scale: 1.03 }}
           >
             <img
-              src={product.img}
-              alt={product.name}
+              src={product.image}
+              alt={product.productName}
               className="w-full h-48 object-cover"
             />
             <div className="p-4">
