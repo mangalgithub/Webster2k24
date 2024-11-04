@@ -192,6 +192,50 @@ const BuyerDashboard = () => {
           </button>
         </div>
 
+        {/* search button */}
+        <div className="flex justify-end">
+          <form className="w-64">
+            <label
+              htmlFor="default-search"
+              className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+            >
+              Search
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search..."
+                required
+              />
+              <button
+                type="submit"
+                className="text-white absolute right-2 bottom-1 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+        </div>
+
         {/* Product Listing Section */}
         <section className="text-gray-600 body-font">
           <div className="container px-5 py-24 mx-auto">
@@ -227,51 +271,144 @@ const BuyerDashboard = () => {
       </div>
 
       {/* Filter Section */}
+      {/* Filter Section */}
       <div className="w-64 p-4 bg-gray-100 border-l border-gray-300">
         <h2 className="text-lg font-medium text-gray-700 mb-4">
           Filter Options
         </h2>
 
-        {/* Theme Filter */}
+        {/* Category Filter */}
         <div className="mb-6">
-          <h3 className="text-md font-semibold text-gray-600 mb-2">Theme</h3>
+          <h3 className="text-md font-semibold text-gray-600 mb-2">Category</h3>
           <div className="space-y-2">
             <label className="flex items-center">
               <input type="checkbox" className="mr-2" />
-              Electronics
+              Men's T-shirts & Polos
             </label>
             <label className="flex items-center">
               <input type="checkbox" className="mr-2" />
-              Fashion & Apparel
+              Men's Shirts
             </label>
             <label className="flex items-center">
               <input type="checkbox" className="mr-2" />
-              Groceries
+              Men's Jeans & Trousers
             </label>
             <label className="flex items-center">
               <input type="checkbox" className="mr-2" />
-              Home Decor
+              Men's Shorts
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Men's Kurtas & Ethnic Wear
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Men's Jackets & Blazers
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Men's Sleepwear
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's T-shirts
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Shirts
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Dresses
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Tops & T-shirts
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Kurtis & Tunics
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Sarees
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Suits & Sets
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Jeans & Pants
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Ethnic Wear
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Jackets & Coats
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Women's Sleepwear
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Jewelry
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Watches
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Bags & Wallets
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Belts
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Scarves & Stoles
+            </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Sunglasses
             </label>
           </div>
         </div>
 
-        {/* Tag Filter */}
+        {/* Price Range Filter */}
         <div className="mb-6">
-          <h3 className="text-md font-semibold text-gray-600 mb-2">Tags</h3>
-          <div className="space-y-2">
-            <label className="flex items-center">
-              <input type="checkbox" className="mr-2" />
-              New Arrivals
-            </label>
-            <label className="flex items-center">
-              <input type="checkbox" className="mr-2" />
-              Best Sellers
-            </label>
-            <label className="flex items-center">
-              <input type="checkbox" className="mr-2" />
-              Discounted
-            </label>
+          <h3 className="text-md font-semibold text-gray-600 mb-2">
+            Price Range
+          </h3>
+          <div className="flex items-center space-x-2">
+            <input
+              type="number"
+              placeholder="From"
+              className="w-1/2 p-2 border border-gray-300 rounded-md"
+            />
+            <input
+              type="number"
+              placeholder="To"
+              className="w-1/2 p-2 border border-gray-300 rounded-md"
+            />
           </div>
+          <button className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200">
+            Apply Price Range
+          </button>
+        </div>
+
+        {/* Sort Option */}
+        <div className="mb-6">
+          <h3 className="text-md font-semibold text-gray-600 mb-2">Sort By</h3>
+          <select className="w-full p-2 border border-gray-300 rounded-md">
+            <option value="lowToHigh">Price: Low to High</option>
+            <option value="highToLow">Price: High to Low</option>
+          </select>
         </div>
 
         {/* Filter Button */}

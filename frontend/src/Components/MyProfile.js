@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const MyProfile = () => {
+  const navigate =useNavigate();
+
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     name: "John Doe",
@@ -12,7 +14,8 @@ const MyProfile = () => {
   });
 
   const handleEditClick = () => {
-    setIsEditing(true);
+    // setIsEditing(true);
+      navigate('/profile_update');
   };
 
   const handleInputChange = (e) => {

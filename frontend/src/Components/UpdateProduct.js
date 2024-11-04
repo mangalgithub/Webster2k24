@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const UpdateProduct = () => {
   const [productData, setProductData] = useState({
-    name: "",
+    name: "mangal",
     description: "",
     sizes: [],
     price: "",

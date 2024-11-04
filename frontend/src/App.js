@@ -21,7 +21,7 @@ import Orders from "./Components/Orders";
 import MyWishList from "./Components/MyWishList";
 import ProfileUpdate from "./Components/ProfileUpdate";
 import UpdateProduct from "./Components/UpdateProduct";
-
+import MyProfile from "./Components/MyProfile";
 function App() {
   return (
     <Router>
@@ -60,6 +60,7 @@ function AppContent() {
         <Route path="/wishlist" element={<MyWishList />} />
         <Route path="/profile_update" element={<ProfileUpdate />} />
         <Route path="/edit_prod" element={<UpdateProduct />} />
+        <Route path="/profile" element={<MyProfile />} />
       </Routes>
     </>
   );
