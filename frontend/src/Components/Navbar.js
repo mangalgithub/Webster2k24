@@ -54,7 +54,7 @@ const Navbar = () => {
               <ul className="py-2">
                 <li>
                   <a
-                    href="/"
+                    href="/profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     My Profile
@@ -62,7 +62,7 @@ const Navbar = () => {
                 </li>
                 <li>
                   <a
-                    href="/setting"
+                    href="/orders"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     My Orders
@@ -70,7 +70,7 @@ const Navbar = () => {
                 </li>
                 <li>
                   <a
-                    href="/earnings"
+                    href="/wishlist"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     My WishList
@@ -78,7 +78,7 @@ const Navbar = () => {
                 </li>
                 <li>
                   <a
-                    href="/sign-out"
+                    href="/logout"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     Sign out
