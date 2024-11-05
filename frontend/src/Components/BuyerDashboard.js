@@ -8,6 +8,7 @@ import calendarWeeksTemplate from './../../node_modules/flowbite-datepicker/js/p
 const BuyerDashboard = () => {
    const [carouselImages, setCarouselImages] = useState([]);
    const [products, setProducts] = useState([]);
+   const [sortOption, setSortOption] = useState("");
   const fetchTopFiveProducts = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/productC/topFiveProducts");
@@ -20,7 +21,9 @@ const BuyerDashboard = () => {
     }
   };
 
-  
+  const handleSortChange = (event) => {
+    setSortOption(event.target.value);
+  };
 
   const fetchProducts = async () => {
     try {
@@ -31,10 +34,34 @@ const BuyerDashboard = () => {
       console.error("Error fetching products:", error);
     }
   }
+  
+   const fetchSortedProducts = async() => {
+    try{
+    const url = `http://localhost:5000/api/productC/sortProducts?sort=${sortOption}`;
+    const response = await axios.get(url);
+    console.log(response.data.products);
+    setProducts(response.data.products);
+   }
+   catch(error){
+    console.error("Error fetching sorted products:", error);
+   }
+  }
+
   useEffect(() => {
     fetchTopFiveProducts();
+    //console.log(sortOption)
     fetchProducts();
+    // if(sortOption !== ""){
+    //   console.log("hi")
+    //   fetchProducts();
+    // }
+    // else{
+    //   fetchSortedProducts();
+    // }
+    
   }, []);
+
+
   // Dummy data for carousel images
   // const carouselImages = [
   //    loginBackground,
@@ -405,9 +432,10 @@ const BuyerDashboard = () => {
         {/* Sort Option */}
         <div className="mb-6">
           <h3 className="text-md font-semibold text-gray-600 mb-2">Sort By</h3>
-          <select className="w-full p-2 border border-gray-300 rounded-md">
-            <option value="lowToHigh">Price: Low to High</option>
-            <option value="highToLow">Price: High to Low</option>
+          <select className="w-full p-2 border border-gray-300 rounded-md" onChange={handleSortChange} value={sortOption}>
+            <option value="">Select</option>
+            <option value="asc">Price: Low to High</option>
+            <option value="desc">Price: High to Low</option>
           </select>
         </div>
 

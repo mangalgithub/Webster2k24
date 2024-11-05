@@ -1,5 +1,6 @@
 import { Designer } from "../models/designer.model.js";
 import { Product } from "../models/product.model.js";
+import uploadOnCloudinary from "../utils/cloudinary.js";
 
 // to get all the products created by a designer through his login details
 export const getProductsDesigned = async (req, res) => {
@@ -11,7 +12,7 @@ export const getProductsDesigned = async (req, res) => {
       { path: "designerId" },
     ]);
 
-    console.log(products);
+    //console.log(products);
     if (!products) {
       return res.status(400).json({
         message: "No products found",
@@ -40,7 +41,6 @@ export const addNewProduct = async (req, res) => {
       productName,
       description,
       price,
-      image,
       size,
       category,
       theme,
@@ -62,23 +62,25 @@ export const addNewProduct = async (req, res) => {
         success: false,
       });
     }
-
+   let photoURL="";
+   console.log("Controller", req.file);
     if (req.file) {
+      console.log(req.file);
       const response = await uploadOnCloudinary(req.file.path);
-      image = response.secure_url;
+      photoURL = response.secure_url;
+      console.log(photoURL);
     }
     const product = Product.create({
       productName,
       description,
       price,
-      image,
-      size: size.split(","),
+      size,
       category,
       theme,
       tags,
       sustainabilityBadge,
       designerId: req.id,
-      image,
+      image: photoURL,
     });
     const productId = product._id;
     const designerId = req.id;

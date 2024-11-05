@@ -10,19 +10,12 @@ const Navbar = () => {
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a
-          href="/"
-          className="flex items-center space-x-3 rtl:space-x-reverse"
-        >
-          <img
-            src={LogoBack}
-            className="h-8"
-            alt="logo"
-          />
+        <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+          <img src={LogoBack} className="h-8" alt="logo" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             TrendyF
           </span>
-         </a>
+        </a>
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <button
             type="button"
@@ -48,7 +41,7 @@ const Navbar = () => {
                   Bonnie Green
                 </span>
                 <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                  name@flowbite.com
+                  Mangal Gupta
                 </span>
               </div>
               <ul className="py-2">
@@ -66,6 +59,14 @@ const Navbar = () => {
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     My Orders
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/my_cart"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
+                    My Cart
                   </a>
                 </li>
                 <li>
