@@ -1,11 +1,27 @@
-import React, { useState } from "react";
-
+import React, { useState , useEffect} from "react";
+import axios from "axios";
 const MyCart = () => {
   const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Men's T-shirt", price: 500, quantity: 2 },
-    { id: 2, name: "Women's Jeans", price: 800, quantity: 1 },
-    { id: 3, name: "Watch", price: 1200, quantity: 1 },
+    // { id: 1, name: "Men's T-shirt", price: 500, quantity: 2 },
+    // { id: 2, name: "Women's Jeans", price: 800, quantity: 1 },
+    // { id: 3, name: "Watch", price: 1200, quantity: 1 },
   ]);
+const fetchCartItems = async () => {
+  try{
+    const response = await axios.get("http://localhost:5000/api/customer/getCartItems",
+      {withCredentials: true}
+    );
+    setCartItems(response.data);
+    console.log(response.data);
+  }
+  catch(error){
+    console.log(error);
+  }
+  
+}
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
   // Simulate backend API call to remove an item
   const removeItemFromBackend = async (id) => {

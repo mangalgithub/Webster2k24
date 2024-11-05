@@ -13,9 +13,11 @@ const DesignerDashboard = () => {
   const fetchproducts = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/productD/getProducts"
+        "http://localhost:5000/api/productD/getProducts",{
+          withCredentials: true,
+        }
       );
-      console.log(response.data.products);
+      //console.log(response.data.products);
       setProducts(response.data.products);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -64,7 +66,7 @@ const DesignerDashboard = () => {
             />
             <div className="p-4">
               <h2 className="text-lg font-bold text-gray-700 mb-2">
-                {product.name}
+                {product.productName}
               </h2>
               <div className="flex gap-4">
                 <motion.button

@@ -242,7 +242,9 @@ export const myOrders = async (req, res) => {
 export const getCartItems = async (req, res) => {
   try {
     const customerId = req.id;
-    const customer = await Customer.findById(customerId);
+    const customer = await Customer.findById(customerId).populate(
+      "cartItems.productId"
+    );
     if (!customer) {
       return res
         .status(404)

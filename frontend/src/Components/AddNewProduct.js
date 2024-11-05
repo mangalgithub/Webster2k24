@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const AddNewProduct = () => {
   const [productData, setProductData] = useState({
-    name: "",
+    productName: "",
     description: "",
-    sizes: [],
+    size: [],
     price: "",
     image: null,
     category: "",
@@ -29,9 +30,9 @@ const AddNewProduct = () => {
   const handleSizeChange = (size) => {
     setProductData((prevData) => ({
       ...prevData,
-      sizes: prevData.sizes.includes(size)
-        ? prevData.sizes.filter((s) => s !== size)
-        : [...prevData.sizes, size],
+      size: prevData.size.includes(size)
+        ? prevData.size.filter((s) => s !== size)
+        : [...prevData.size, size],
     }));
   };
 
@@ -39,9 +40,25 @@ const AddNewProduct = () => {
     setProductData({ ...productData, tags: e.target.value.split(",") });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     console.log("Product data submitted:", productData);
-    alert("Product added successfully!");
+
+    const formData = new FormData();
+      formData.append("productName",productData.productName);
+      formData.append("description", productData.description);
+      formData.append("price", productData.price);
+      formData.append("size", productData.size);
+      formData.append("category", productData.category);
+      formData.append("theme", productData.theme);
+      formData.append("tags", productData.tags);
+      formData.append("sustainabilityBadge", productData.sustainabilityBadge);
+      if (productData.image) formData.append("image", productData.image);
+
+      const response= await axios.post("http://localhost:5000/api/productD/add", formData,{
+        withCredentials: true
+      });
+        console.log(response.data);
+        alert("Product added successfully!");
   };
 
   return (
@@ -54,8 +71,8 @@ const AddNewProduct = () => {
         </label>
         <input
           type="text"
-          name="name"
-          value={productData.name}
+          name="productName"
+          value={productData.productName}
           onChange={handleInputChange}
           className="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:border-blue-500"
           placeholder="Organic Cotton T-Shirt"
@@ -81,7 +98,7 @@ const AddNewProduct = () => {
             <label key={size} className="flex items-center">
               <input
                 type="checkbox"
-                checked={productData.sizes.includes(size)}
+                checked={productData.size.includes(size)}
                 onChange={() => handleSizeChange(size)}
                 className="form-checkbox h-5 w-5 text-blue-600"
               />

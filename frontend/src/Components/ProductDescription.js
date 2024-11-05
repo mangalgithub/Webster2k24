@@ -20,7 +20,18 @@ const ProductDescription = () => {
   useEffect(() => {
     fetchProduct();
   }, []);
+const handleAddToCart = () => {
+  //console.log("Product added to cart:", product);
+  const response = axios.post(`http://localhost:5000/api/customer/addToCart`,{ productId: product._id },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+  alert("Product added to cart!");
 
+}
   if (!product) {
     return <div>Product not found</div>;
   }
@@ -64,7 +75,7 @@ const ProductDescription = () => {
                 <span className="title-font font-medium text-2xl text-gray-900">
                 ₹ {product.price}
                 </span>
-                <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded" onClick={handleAddToCart} >
                   Add To Cart
                 </button>
                 <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
