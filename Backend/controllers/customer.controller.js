@@ -5,6 +5,7 @@ import { Order } from "../models/order.model.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 import { Notification } from "../models/Notification.model.js";
 import { Designer } from "../models/designer.model.js";
+// import uploadOnCloudinary from "../utils/cloudinary.js";
 
 export const registerCustomer = async (req, res) => {
   try {
@@ -18,7 +19,7 @@ export const registerCustomer = async (req, res) => {
       area,
       city,
     } = req.body;
-    console.log("req body",req.body);
+
     // Check if the request includes all required fields
     if (
       !fullName ||
@@ -120,7 +121,7 @@ export const loginCustomer = async (req, res) => {
       .status(200)
       .cookie("token", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpOnly: true, 
+        httpOnly: true,
         sameSite: "strict", //This enforces a strict same-site policy, meaning the cookie will only be sent if the request originates from the same domain.
       })
       .json({
@@ -133,7 +134,6 @@ export const loginCustomer = async (req, res) => {
     return res.status(500).json({
       message: "Internal server error",
       success: false,
-
     });
   }
 };
@@ -293,7 +293,7 @@ export const addToCart = async (req, res) => {
       message: "Product added to cart",
       cartItems: customer.cartItems,
     });
-  } catch (error){
+  } catch (error) {
     console.log(error);
     return res
       .status(500)
@@ -422,6 +422,11 @@ export const addToWishlist = async (req, res) => {
     if (!customer) {
       return res.status(404).json({ message: "Customer not found" });
     }
+    if (customer.wishlistItems.includes(pid)) {
+      return res
+        .status(400)
+        .json({ message: "Product already in wishlist", success: false });
+    }
     customer.wishlistItems.push(pid);
     await customer.save();
     return res.status(200).json({
@@ -447,9 +452,10 @@ export const getWishlist = async (req, res) => {
     if (!customer) {
       return res.status(404).json({ message: "Customer not found" });
     }
-    return res
-      .status(200)
-      .json({ wishlistItems: customer.wishlistItems, success: true });
+    return res.status(200).json({
+      wishlistItems: customer.wishlistItems,
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     return res
@@ -462,11 +468,13 @@ export const getWishlist = async (req, res) => {
 //Here we have assumed that when the designer will add a new product ,it will get added as a notification to all the customers following him
 export const getNewWishlist = async (req, res) => {
   try {
-    const notifications = Notification.find({
+    const notifications = await Notification.find({
       customerId: req.id,
       isRead: false,
     }).populate("productId");
-    const products = await notifications.map((n) => n.productId);
+
+    const products = notifications.map((n) => n.productId);
+
     return res.status(200).json({ products, success: true });
   } catch (error) {
     console.log(error);
@@ -503,8 +511,8 @@ export const unfollowDesigner = async (req, res) => {
     const customerId = req.id;
     const customer = await Customer.findById(customerId);
     const designer = await Designer.findById(designerId);
-    customer.following = customer.following.filter((id) => id !== designerId);
-    designer.followers = designer.followers.filter((id) => id !== customerId);
+    customer.following = customer.following.filter((id) => id != designerId);
+    designer.followers = designer.followers.filter((id) => id != customerId);
     await customer.save();
     await designer.save();
     return res
@@ -537,4 +545,3 @@ export const markRead = async (req, res) => {
       .json({ message: "Internal server error", success: false });
   }
 };
-

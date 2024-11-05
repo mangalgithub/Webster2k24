@@ -63,6 +63,10 @@ export const addNewProduct = async (req, res) => {
       });
     }
 
+    if (req.file) {
+      const response = await uploadOnCloudinary(req.file.path);
+      image = response.secure_url;
+    }
     const product = Product.create({
       productName,
       description,
@@ -74,6 +78,7 @@ export const addNewProduct = async (req, res) => {
       tags,
       sustainabilityBadge,
       designerId: req.id,
+      image,
     });
     const productId = product._id;
     const designerId = req.id;

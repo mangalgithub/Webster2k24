@@ -1,19 +1,26 @@
-import React,{useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 const DesignerDashboard = () => {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
+  const handleAddNewItem = () => {
+    console.log("Add New Item clicked");
+    navigate("/addProduct");
+  };
 
   const fetchproducts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/productD/getProducts");
+      const response = await axios.get(
+        "http://localhost:5000/api/productD/getProducts"
+      );
       console.log(response.data.products);
       setProducts(response.data.products);
-    } catch (error){
+    } catch (error) {
       console.error("Error fetching products:", error);
     }
-  }
+  };
   // const products = [
   //   { _id: 1, productName: "Stylish T-Shirt", image: "https://dummyimage.com/200x200" },
   //   { _id: 2, productName: "Modern Jeans", image: "https://dummyimage.com/200x200" },
@@ -21,9 +28,8 @@ const DesignerDashboard = () => {
   //   { _id: 4, productName: "Casual Jacket", image: "https://dummyimage.com/200x200" },
   // ];
 
-
   useEffect(() => {
-      fetchproducts();
+    fetchproducts();
   }, []);
 
   return (
@@ -38,6 +44,7 @@ const DesignerDashboard = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className="mb-6 px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+        onClick={handleAddNewItem}
       >
         Add New Item
       </motion.button>

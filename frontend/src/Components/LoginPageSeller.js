@@ -19,12 +19,13 @@ const LoginPage = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
 
       console.log("response", response.data);
 
-      // Set token in Authorization header and local storage
+      //Set token in Authorization header and local storage
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response.data.token}`;
