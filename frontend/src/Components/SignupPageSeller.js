@@ -1,7 +1,67 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import signupBackground from "../assests/images/loginBackground.jpg";
+import axios from "axios";
 const SignUpPageSeller = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [storeName, setStoreName] = useState("");
+  const [street, setStreet] = useState("");
+  const [area, setArea] = useState("");
+  const [city, setCity] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Ensure formData is initialized at the beginning
+      const formData = new FormData();
+
+      // Append fields in the correct order
+      formData.append("fullName", fullName);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("storeName", storeName);
+      formData.append("street", street);
+      formData.append("area", area);
+      formData.append("city", city);
+      if (photo) formData.append("profilePhoto", photo); // Conditionally add profile photo
+
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+
+      // Sending the formData with axios
+      const response = await axios.post(
+        "http://localhost:5000/api/designer/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log(response.data); // Log successful response data
+      navigate("/seller/login");
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        console.log(error.response.data.message);
+      } else {
+        console.log("An error occurred. Please try again.");
+      }
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div
       className="relative bg-cover bg-center min-h-screen flex items-center justify-center"
@@ -13,7 +73,7 @@ const SignUpPageSeller = () => {
 
       {/* Form container */}
       <div className="relative z-10 max-w-md mx-auto p-12 bg-white bg-opacity-80 rounded-lg shadow-lg backdrop-blur-lg">
-        <form className="space-y-2">
+        <form className="space-y-2" onSubmit={handleSubmit}>
           <h1 className="text-2xl font-bold text-center text-gray-700">
             Sign Up
           </h1>
@@ -27,6 +87,8 @@ const SignUpPageSeller = () => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
               required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
             />
             <label
               htmlFor="fullname"
@@ -45,6 +107,8 @@ const SignUpPageSeller = () => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <label
               htmlFor="email"
@@ -63,6 +127,8 @@ const SignUpPageSeller = () => {
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <label
               htmlFor="password"
@@ -75,12 +141,14 @@ const SignUpPageSeller = () => {
           {/* Phone Number */}
           <div className="relative z-0 w-full mb-5 group">
             <input
-              type="tel"
+              type="number"
               name="phone"
               id="phone"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
               required
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
             />
             <label
               htmlFor="phone"
@@ -95,17 +163,19 @@ const SignUpPageSeller = () => {
             <div className="relative z-0 w-full mb-5 group">
               <input
                 type="text"
-                name="houseNo"
-                id="houseNo"
+                name="storeName"
+                id="storeName"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
+                value={storeName}
+                onChange={(e) => setStoreName(e.target.value)}
               />
               <label
-                htmlFor="houseNo"
+                htmlFor="storeName"
                 className="absolute text-sm text-gray-500 transform -translate-y-6 scale-75 top-3 -z-10 peer-focus:font-medium peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
-                House No
+                Store Name
               </label>
             </div>
 
@@ -117,6 +187,8 @@ const SignUpPageSeller = () => {
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
               />
               <label
                 htmlFor="street"
@@ -134,6 +206,8 @@ const SignUpPageSeller = () => {
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
               />
               <label
                 htmlFor="area"
@@ -151,6 +225,8 @@ const SignUpPageSeller = () => {
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
               />
               <label
                 htmlFor="city"
@@ -168,6 +244,10 @@ const SignUpPageSeller = () => {
               name="profilePhoto"
               id="profilePhoto"
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setPhoto(file);
+              }}
             />
             <label htmlFor="profilePhoto" className="text-sm text-gray-500">
               Upload Profile Photo
