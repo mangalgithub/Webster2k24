@@ -4,7 +4,7 @@ import Fuse from "fuse.js";
 
 export const showAllProducts = async (req, res) => {
   try {
-    //console.log("hello");
+
     const products = await Product.find();
     return res.status(200).json({ products, success: true });
   } catch (error) {

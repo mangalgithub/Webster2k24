@@ -14,7 +14,8 @@ export const registerDesigner = async (req, res) => {
       area,
       city,
     } = req.body;
-
+    // console.log(req.body);
+    // console.log("hi");
     // Check if the request includes all required fields
     if (
       !fullName ||
@@ -51,7 +52,7 @@ export const registerDesigner = async (req, res) => {
       const response = await uploadOnCloudinary(req.file.path);
       profilePhotoUrl = response.secure_url;
     }
-
+    // console.log(profilePhotoUrl);
     // Create the customer
     await Designer.create({
       fullName,
@@ -122,7 +123,7 @@ export const loginDesigner = async (req, res) => {
       .json({
         message: `Welcome back ${designer.fullName}`,
         success: true,
-        token:token
+        token: token,
       });
   } catch (err) {
     console.log(err);
