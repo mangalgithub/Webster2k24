@@ -4,8 +4,11 @@ import Fuse from "fuse.js";
 
 export const showAllProducts = async (req, res) => {
   try {
-
-    const products = await Product.find();
+    //console.log("hello");
+    const products = await Product.find().populate([
+      {path: "reviews"},
+      {path: "designerId"}, 
+    ]);
     return res.status(200).json({ products, success: true });
   } catch (error) {
     console.log(error);
@@ -20,7 +23,10 @@ export const showProductById = async (req, res) => {
     console.log(req.params);
     const {productId}=req.params;
     console.log(productId);
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate([
+      {path:"reviews"},
+      {path:"designerId"},
+    ]);
     return res.status(200).json({ product, success: true });
   } catch (error) {
     console.log(error);

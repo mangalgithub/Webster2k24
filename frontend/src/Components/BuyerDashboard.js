@@ -88,6 +88,14 @@ const BuyerDashboard = () => {
     );
   };
 
+    const [showReviews, setShowReviews] = useState({});
+
+    const toggleReviews = (productId) => {
+      setShowReviews((prevState) => ({
+        ...prevState,
+        [productId]: !prevState[productId],
+      }));
+    };
   // Dummy data for product listing
   // const products = [
   //   {
@@ -269,26 +277,56 @@ const BuyerDashboard = () => {
             <div className="flex flex-wrap -m-4">
               {products.map((product) => (
                 <div key={product._id} className="lg:w-1/4 md:w-1/2 p-4 w-full">
-                  <a className="block relative h-48 rounded overflow-hidden">
-                    <Link
-                      to={`/product/${product._id}`}
-                      className="block relative h-48 rounded overflow-hidden"
-                    >
+                  <div className="relative h-48 rounded overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                    <Link to={`/product/${product._id}`}>
                       <img
                         alt="ecommerce"
-                        className="object-cover object-center w-full h-full block"
+                        className="object-cover object-center w-full h-full"
                         src={product.image}
                       />
                     </Link>
-                  </a>
+                  </div>
                   <div className="mt-4">
-                    <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
+                    <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1 uppercase">
                       {product.category}
                     </h3>
                     <h2 className="text-gray-900 title-font text-lg font-medium">
                       {product.productName}
                     </h2>
-                    <p className="mt-1">₹{product.price.toFixed(2)}</p>
+                    <p className="mt-1 font-semibold">
+                      ₹{product.price.toFixed(2)}
+                    </p>
+                    <p className="mt-1 text-yellow-500 font-semibold">
+                      Rating: {product.rating}
+                    </p>
+                    <button
+                      onClick={() => toggleReviews(product._id)}
+                      className="mt-3 text-indigo-500 inline-flex items-center hover:text-indigo-600 font-medium"
+                    >
+                      {showReviews[product._id]
+                        ? "Hide Reviews"
+                        : "Show Reviews"}
+                    </button>
+                    {showReviews[product._id] && (
+                      <div className="mt-2 p-3 bg-gray-100 rounded shadow-inner">
+                        {product.reviews && product.reviews.length > 0 ? (
+                          product.reviews.map((review, index) => (
+                            <div
+                              key={index}
+                              className="border-b border-gray-300 pb-2 mb-2"
+                            >
+                              <p className="text-sm text-gray-700">
+                                "{review.comment}"
+                              </p>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-sm text-gray-500">
+                            No reviews available.
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
