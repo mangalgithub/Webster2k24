@@ -1,8 +1,27 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import LogoBack from "../assests/images/logo backgroung.jpg";
 import ProfileSvg from "../assests/images/profileSvg.svg";
+import axios from "axios";
 
 const Navbar = () => {
+  const [profileData, setProfileData] = useState({
+
+  });
+  const fetchCustomerDetails = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/customer/getCustomerDetails", {
+        withCredentials: true
+      });
+      //console.log(response.data.customer);
+      setProfileData(response.data.customer);
+    } catch (error) {
+      console.error("Error fetching customer details:", error);
+    }
+  };
+      
+  useEffect(() => {
+    fetchCustomerDetails();
+  }, []);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
@@ -26,7 +45,7 @@ const Navbar = () => {
             <span className="sr-only">Open user menu</span>
             <img
               className="w-8 h-8 rounded-full"
-              src={ProfileSvg}
+              src={profileData.profilePhoto||ProfileSvg}
               alt="user-photo"
             />
           </button>
@@ -37,14 +56,22 @@ const Navbar = () => {
               id="user-dropdown"
             >
               <div className="px-4 py-3">
-                <span className="block text-sm text-gray-900 dark:text-white">
+                {/* <span className="block text-sm text-gray-900 dark:text-white">
                   Bonnie Green
-                </span>
-                <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
+                </span> */}
+                {/* <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
                   Mangal Gupta
-                </span>
+                </span> */}
               </div>
               <ul className="py-2">
+              <li>
+                  <a
+                    href="/buyerDashboard"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
+                    Dashboard
+                  </a>
+                </li>
                 <li>
                   <a
                     href="/profile"

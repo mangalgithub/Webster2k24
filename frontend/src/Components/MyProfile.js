@@ -1,18 +1,34 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import ProfileSvg from "../assests/images/profileSvg.svg";
 const MyProfile = () => {
   const navigate =useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: "John Doe",
-    phoneNumber: "+1 (555) 123-4567",
-    houseNumber: "123",
-    street: "Maple Street",
-    area: "Downtown",
-    city: "Metropolis",
+    // name: "John Doe",
+    // phoneNumber: "+1 (555) 123-4567",
+    // houseNumber: "123",
+    // street: "Maple Street",
+    // area: "Downtown",
+    // city: "Metropolis",
   });
-
+  const fetchCustomerDetails = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/customer/getCustomerDetails", {
+        withCredentials: true
+      });
+      console.log(response.data.customer);
+      setProfileData(response.data.customer);
+    } catch (error){
+      console.error("Error fetching customer details:", error);
+    }
+  };
+      
+  useEffect(() => {
+    fetchCustomerDetails();
+  }, []);
   const handleEditClick = () => {
     // setIsEditing(true);
       navigate('/profile_update');
@@ -120,24 +136,34 @@ const MyProfile = () => {
         </>
       ) : (
         <>
-          <div className="text-gray-700">
-            <strong>Name:</strong> {profileData.name}
-          </div>
-          <div className="text-gray-700">
-            <strong>Phone Number:</strong> {profileData.phoneNumber}
-          </div>
-          <div className="text-gray-700">
-            <strong>House Number:</strong> {profileData.houseNumber}
-          </div>
-          <div className="text-gray-700">
-            <strong>Street:</strong> {profileData.street}
-          </div>
-          <div className="text-gray-700">
-            <strong>Area:</strong> {profileData.area}
-          </div>
-          <div className="text-gray-700">
-            <strong>City:</strong> {profileData.city}
-          </div>
+          <div className="profile-container bg-white p-5 rounded-lg shadow-md max-w-2xl mx-auto flex items-start">
+  
+  <div className="profile-details flex-1">
+    <div className="text-gray-700 mb-2">
+      <strong>Name:</strong> {profileData.fullName}
+    </div>
+    <div className="text-gray-700 mb-2">
+      <strong>Phone Number:</strong> {profileData.phoneNumber}
+    </div>
+    <div className="text-gray-700 mb-2">
+      <strong>House Number:</strong> {profileData.address ? profileData.address.houseNo : ""}
+    </div>
+    <div className="text-gray-700 mb-2">
+      <strong>Street:</strong> {profileData.address ? profileData.address.street : ""}
+    </div>
+    <div className="text-gray-700 mb-2">
+      <strong>Area:</strong> {profileData.address ? profileData.address.area : ""}
+    </div>
+    <div className="text-gray-700">
+      <strong>City:</strong> {profileData.address ? profileData.address.city : ""}
+    </div>
+  </div>
+
+  <div className="profile-image ml-5 w-32 h-32 rounded-full overflow-hidden shadow-lg">
+    <img src={profileData.profilePhoto||ProfileSvg} alt="Profile" className="w-full h-full object-cover" />
+  </div>
+</div>
+
           <button
             onClick={handleEditClick}
             className="mt-4 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"

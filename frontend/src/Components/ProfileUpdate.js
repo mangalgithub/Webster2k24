@@ -1,50 +1,89 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-
 const ProfileUpdate = () => {
-  const [profileData, setProfileData] = useState({
-    fullName: "",
-    phoneNumber: "",
-    houseNo: "",
-    street: "",
-    area: "",
-    city: "",
-    profilePhoto: null,
-  });
+  // const [profileData, setProfileData] = useState({
+  // fullName: "",
+  // phoneNumber: "",
+  // houseNo: "",
+  // street: "",
+  // area: "",
+  // city: "",
+  // profilePhoto: null,
+  // });
+  const [fullName, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [houseNo, setHouseNo] = useState("");
+  const [street, setStreet] = useState("");
+  const [area, setArea] = useState("");
+  const [city, setCity] = useState("");
+  const [pic, setPic] = useState(null);
+  const fetchProfileData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/customer/getCustomerDetails",
+        {withCredentials: true}
+      );
+       const data=response.data.customer;
+       //console.log(data);
+      setName(data.fullName);
+      setPhoneNumber(data.phoneNumber);
+      setHouseNo(data.address.houseNo);
+      setStreet(data.address.street);
+      setArea(data.address.area);
+      setCity(data.address.city);
+    } catch (error) {
+      console.log(error);
+    }   
+  }
+useEffect(() => {
+  fetchProfileData();
+},[]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProfileData({ ...profileData, [name]: value });
-  };
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setProfileData({ ...profileData, [name]: value });
+  // };
 
   const handlePhotoChange = (e) => {
-    setProfileData({
-      ...profileData,
-      profilePhoto: URL.createObjectURL(e.target.files[0]),
-    });
+    const file = e.target.files[0];
+    setPic(file);
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(profileData);
-
     // Send the updated profile data to the backend
-    
-    const formData = new FormData();
-      formData.append("fullName",profileData.fullName);
-      formData.append("phoneNumber", profileData.phoneNumber);
-      formData.append("houseNo", profileData.houseNo);
-      formData.append("street", profileData.street);
-      formData.append("area", profileData.area);
-      formData.append("city", profileData.city);
-      if (profileData.profilePhoto) formData.append("profilePhoto", profileData.profilePhoto);
+    try {
+      const formData = new FormData();
+      formData.append("fullName", fullName);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("houseNo", houseNo);
+      formData.append("street", street);
+      formData.append("area", area);
+      formData.append("city", city);
+      if (pic) formData.append("profilePhoto", pic);
 
-      const response= await axios.post("http://localhost:5000/api/customer/update", formData,{
-        withCredentials: true
-      });
-        console.log(response.data);
-    alert("Profile Updated Successfully!");
+      const response = await axios.post(
+        "http://localhost:5000/api/customer/update",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      //console.log(response.data);
+      alert("Profile Updated Successfully!");
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        console.log(error.response.data.message);
+      } else {
+        console.log("An error occurred. Please try again.");
+      }
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -58,8 +97,8 @@ const ProfileUpdate = () => {
           <input
             type="text"
             name="fullName"
-            value={profileData.fullName}
-            onChange={handleInputChange}
+            value={fullName}
+            onChange={(e) => setName(e.target.value)}
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -69,8 +108,8 @@ const ProfileUpdate = () => {
           <input
             type="tel"
             name="phoneNumber"
-            value={profileData.phoneNumber}
-            onChange={handleInputChange}
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -80,8 +119,8 @@ const ProfileUpdate = () => {
           <input
             type="text"
             name="houseNo"
-            value={profileData.houseNo}
-            onChange={handleInputChange}
+            value={houseNo}
+            onChange={(e) => setHouseNo(e.target.value)}
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -91,8 +130,8 @@ const ProfileUpdate = () => {
           <input
             type="text"
             name="street"
-            value={profileData.street}
-            onChange={handleInputChange}
+            value={street}
+            onChange={(e) => setStreet(e.target.value)}
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -102,8 +141,8 @@ const ProfileUpdate = () => {
           <input
             type="text"
             name="area"
-            value={profileData.area}
-            onChange={handleInputChange}
+            value={area}
+            onChange={(e) => setArea(e.target.value)}
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -113,8 +152,8 @@ const ProfileUpdate = () => {
           <input
             type="text"
             name="city"
-            value={profileData.city}
-            onChange={handleInputChange}
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -128,9 +167,9 @@ const ProfileUpdate = () => {
             onChange={handlePhotoChange}
             className="p-2 border border-gray-300 rounded-lg focus:outline-none"
           />
-          {profileData.profilePhoto && (
+          {pic && (
             <img
-              src={profileData.profilePhoto}
+              src={pic}
               alt="Profile Preview"
               className="w-24 h-24 rounded-full mt-4 mx-auto object-cover"
             />
