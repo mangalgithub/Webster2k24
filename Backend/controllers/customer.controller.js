@@ -7,6 +7,17 @@ import { Notification } from "../models/Notification.model.js";
 import { Designer } from "../models/designer.model.js";
 // import uploadOnCloudinary from "../utils/cloudinary.js";
 
+export const getCustomerDetails = async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.id);
+    return res.status(200).json({ customer, success: true });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
+  }
+}
 export const registerCustomer = async (req, res) => {
   try {
     const {
@@ -352,6 +363,7 @@ export const clearCart = async (req, res) => {
 export const decrementQuantity = async (req, res) => {
   try {
     const productId = req.query.productId;
+    const inc = req.query.inc;
     const customerId = req.id;
     const customer = await Customer.findById(customerId);
     if (!customer) {
@@ -359,7 +371,12 @@ export const decrementQuantity = async (req, res) => {
     }
     let updatedCartItems = customer.cartItems.map((item) => {
       if (item.productId.toString() === productId) {
-        item.quantity -= 1;
+        if (inc === "true") {
+          item.quantity += 1;
+        }
+        else if (inc === "false") {
+          item.quantity -= 1;
+        }
       }
       return item;
     });
@@ -369,7 +386,7 @@ export const decrementQuantity = async (req, res) => {
     await customer.save();
     return res
       .status(200)
-      .json({ message: "Quantity decremented", cartItems: customer.cartItems });
+      .json({ message: "Quantity decremented or incremented", cartItems: customer.cartItems });
   } catch (error) {
     console.log(error);
     return res

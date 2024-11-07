@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getCustomerDetails,
   loginCustomer,
   logoutCustomer,
   registerCustomer,
@@ -22,7 +23,7 @@ import isAuthenticated from "../middleware/isAuthenticated.js";
 import { upload } from "../middleware/multer.js";
 const router = express.Router();
 //routes related to user authentication and profile
-
+router.route("/getCustomerDetails").get( isAuthenticated,getCustomerDetails);
 router.route("/register").post(upload.single("profilePhoto"), registerCustomer);
 router.route("/login").post(loginCustomer);
 router.route("/logout").get(logoutCustomer);

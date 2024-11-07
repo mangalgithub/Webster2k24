@@ -11,8 +11,8 @@ const fetchCartItems = async () => {
     const response = await axios.get("http://localhost:5000/api/customer/getCartItems",
       {withCredentials: true}
     );
-    setCartItems(response.data);
-    console.log(response.data);
+    setCartItems(response.data.cartItems);
+    //console.log(response.data.cartItems);
   }
   catch(error){
     console.log(error);
@@ -21,89 +21,129 @@ const fetchCartItems = async () => {
 }
   useEffect(() => {
     fetchCartItems();
-  }, []);
+  }, [cartItems]);
 
   // Simulate backend API call to remove an item
-  const removeItemFromBackend = async (id) => {
-    try {
-      // Placeholder for backend API call
-      // Example: await fetch(`/api/cart/${id}`, { method: 'DELETE' });
-      console.log(`Removing item with ID: ${id} from backend`);
-      return true; // Simulate success response
-    } catch (error) {
-      console.error("Failed to remove item:", error);
-      return false;
-    }
-  };
 
   // Function to remove an item from cart
   const removeItem = async (id) => {
-    const success = await removeItemFromBackend(id);
-    if (success) {
-      setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    // const success = await removeItemFromBackend(id);
+    // if (success) {
+    //   setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    // }
+    try{
+      const response = await axios.post('http://localhost:5000/api/customer/removeFromCart',
+      {productId: id},
+        {
+        withCredentials: true
+      },
+      )
+      //console.log(response.data.cartItems);
+      setCartItems(response.data.cartItems);
+    }
+    catch(error){
+      console.log(error);
     }
   };
 
   // Function to increase the quantity of a product
-  const increaseQuantity = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
+  const increaseQuantity = async(id) => {
+    // setCartItems((prevItems) =>
+    //   prevItems.map((item) =>
+    //     item.productId._id === id ? { ...item, quantity: item.quantity + 1 } : item
+    //   )
+    // );
+    try{
+      const response = await axios.get(`http://localhost:5000/api/customer/decrementQuantity?productId=${id}&inc=true`,{
+        withCredentials: true
+      });
+      //console.log(response.data.cartItems);
+      setCartItems(response.data.cartItems);
+    }
+    catch(error){
+      console.log(error);
+    }
+    
   };
 
   // Function to decrease the quantity of a product
-  const decreaseQuantity = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
+  const decreaseQuantity = async(id) => {
+    // setCartItems((prevItems) =>
+    //   prevItems.map((item) =>
+    //     item.id === id && item.quantity > 1
+    //       ? { ...item, quantity: item.quantity - 1 }
+    //       : item
+    //   )
+    // );
+    try{
+      const response = await axios.get(`http://localhost:5000/api/customer/decrementQuantity?productId=${id}&inc=false`,{
+        withCredentials: true
+      });
+      //console.log(response.data.cartItems);
+      setCartItems(response.data.cartItems);
+    }
+    catch(error){
+      console.log(error);
+    }
+    
   };
 
   // Function to calculate the total price of all products
   const calculateTotalPrice = () => {
     return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
+      (total, item) => total + item.productId.price * item.quantity,
       0
     );
   };
 
   // Function to clear the cart
-  const clearCart = () => {
-    setCartItems([]);
+  const clearCart = async() => {
+    try{
+      const response = await axios.get(`http://localhost:5000/api/customer/clearCart`,{
+        withCredentials: true
+      });
+      setCartItems(response.data.cartItems);
+    }
+    catch(error){
+      console.log(error);
+    }
   };
 
   // Function to handle placing an order
   const placeOrder = () => {
-    alert("Order placed successfully!");
-    clearCart();
+    try{
+      const response = axios.get(`http://localhost:5000/api/customer/cartToOrder`,{
+        withCredentials: true
+      })
+      alert("Order placed successfully!");
+    }
+    catch(error){
+      console.log(error);
+    }
+    
   };
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-4 text-gray-700">My Cart</h2>
 
-      {cartItems.length > 0 ? (
+      {cartItems && cartItems.length > 0 ? (
         <div>
           {cartItems.map((item) => (
             <div
-              key={item.id}
+              key={item.productId._id}
               className="flex justify-between items-center border-b py-4"
             >
               <div>
                 <h3 className="text-lg font-semibold text-gray-800">
-                  {item.name}
+                  {item.productId.productName}
                 </h3>
-                <p className="text-gray-500">Price: ₹{item.price}</p>
+                <p className="text-gray-500">Price: ₹{item.productId.price}</p>
               </div>
 
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => decreaseQuantity(item.id)}
+                  onClick={() => decreaseQuantity(item.productId._id)}
                   className="px-3 py-1 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
                 >
                   -
@@ -112,13 +152,13 @@ const fetchCartItems = async () => {
                   {item.quantity}
                 </span>
                 <button
-                  onClick={() => increaseQuantity(item.id)}
+                  onClick={() => increaseQuantity(item.productId._id)}
                   className="px-3 py-1 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
                 >
                   +
                 </button>
                 <button
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => removeItem(item.productId._id)}
                   className="px-3 py-1 ml-3 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 >
                   Remove

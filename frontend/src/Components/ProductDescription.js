@@ -76,7 +76,13 @@ const handleAddToCart = () => {
                    <span className="text-gray-600 ml-3">
                      {product.reviews.length} reviews
                    </span>
-                 </span>
+                   
+                </span>
+                <span className="flex items-center">
+                <span className="text-gray-600 ml-3">
+                     Rating : {product.rating}
+                  </span>
+                  </span>
                  {/* Social Media Links Section */}
                  <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2">
                    {/* Icons omitted for brevity */}
@@ -91,7 +97,8 @@ const handleAddToCart = () => {
                  <span className="title-font font-medium text-2xl text-gray-900">
                    ₹ {product.price}
                  </span>
-                 <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                 <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                 onClick={handleAddToCart} >
                    Add To Cart
                  </button>
                  <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
@@ -103,7 +110,7 @@ const handleAddToCart = () => {
                </div>
                <div className="mt-6">
                  <h3 className="text-lg font-medium text-gray-900">
-                   Created by: {product.designerId.fullName}
+                   Created by: {product.designerId?product.designerId.fullName:""}
                  </h3>
                  <button
                    onClick={handleFollowToggle}
